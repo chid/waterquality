@@ -15,7 +15,12 @@
 #' @family extract_lm
 #' @export
 extract_lm <- function(parameter, algorithm, df){
-  my_lm = lm(as.formula(paste(parameter, "~" ,algorithm)), data =df)
+  if (length(parameter) != 1 || length(algorithm) != 1) {
+    stop("`extract_lm()` expects exactly one `parameter` and one `algorithm`. ",
+         "For multiple variables, use `extract_lm_cv_multi()` or `extract_lm_cv_all()`.")
+  }
+  my_formula <- stats::reformulate(termlabels = algorithm, response = parameter)
+  my_lm = lm(my_formula, data =df)
   R_Squared = summary(my_lm)$r.squared
   P_Value = summary(my_lm)$coefficients[8]
   Slope = summary(my_lm)$coefficients[2]
@@ -48,13 +53,17 @@ extract_lm <- function(parameter, algorithm, df){
 #' @family extract_lm
 #' @export
 #' 
-#' @importFrom stats lm as.formula na.exclude 
+#' @importFrom stats lm reformulate na.exclude 
 #' @importFrom caret trainControl train getTrainPerf
 #' 
 extract_lm_cv <- function(parameter, algorithm, df, train_method = "lm", control_method = "repeatedcv", folds = 3, nrepeats =5){
+  if (length(parameter) != 1 || length(algorithm) != 1) {
+    stop("`extract_lm_cv()` expects exactly one `parameter` and one `algorithm`. ",
+         "For multiple variables, use `extract_lm_cv_multi()` or `extract_lm_cv_all()`.")
+  }
   if (!requireNamespace("caret", quietly = TRUE))
     stop("package caret required, please install it first") 
-  my_formula = as.formula(paste(parameter, "~" ,algorithm))
+  my_formula = stats::reformulate(termlabels = algorithm, response = parameter)
   caret_model = caret::train(form = my_formula,
                              data = df,
                              method = "lm",
