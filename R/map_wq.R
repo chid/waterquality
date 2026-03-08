@@ -8,18 +8,19 @@
 #' @param sample_points geospatial file (.shp or .gpkg) containing sampling locations 
 #' @param map_title text used to generate title of map
 #' @param raster_style method to process the color scale when col is a numeric variable. Please refer to the style argument in the ?tmap::tm_raster() function for more details (Default is "quantile").
+#' @param palette palette passed to `tmap::tm_raster()` to control map colors. (Default is "viridis")
 #' @param histogram Option to add or remove a histogram of the data values. (Default is TRUE)
 #' @return A data visualization of the results
 #'
 #' @family Map_WQ models
 #' @export
-Map_WQ_raster <- function(WQ_raster, sample_points, map_title, raster_style = "quantile", histogram = TRUE) {
+Map_WQ_raster <- function(WQ_raster, sample_points, map_title, raster_style = "quantile", palette = "viridis", histogram = TRUE) {
   if (!requireNamespace("tmap", quietly = TRUE))
     stop("package tmap required, please install it first") 
   tmap::tm_shape(WQ_raster) +
     tmap::tm_raster(title = map_title,
                     style = raster_style, n = 8, midpoint = NA,
-                    palette = "viridis",
+                    palette = palette,
                     legend.reverse = TRUE,
                     legend.hist = histogram) +
     tmap::tm_legend(outside = TRUE, hist.width = 2) +

@@ -9,6 +9,7 @@ Map_WQ_raster(
   sample_points,
   map_title,
   raster_style = "quantile",
+  palette = "viridis",
   histogram = TRUE
 )
 }
@@ -20,6 +21,8 @@ Map_WQ_raster(
 \item{map_title}{text used to generate title of map}
 
 \item{raster_style}{method to process the color scale when col is a numeric variable. Please refer to the style argument in the ?tmap::tm_raster() function for more details (Default is "quantile").}
+
+\item{palette}{palette passed to \code{tmap::tm_raster()} to control map colors. (Default is "viridis")}
 
 \item{histogram}{Option to add or remove a histogram of the data values. (Default is TRUE)}
 }
